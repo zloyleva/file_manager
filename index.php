@@ -69,11 +69,13 @@ function decode_server_var($str){
 }
 
 function prepare_link_url($link_prefix, $add_query, $dir_postfix, $dir){
-
+	global $parent_dir;
 	$html_link = '<li><a href="%s">%s</a></li>';
 	$html_no_link = '<li>%2$s</li>';
 
-	$html = preg_match('/\d+/', $dir)?$html_no_link:$html_link;
+	$file_path = $parent_dir . '/'.$dir;
+	$html = (preg_match('/\d+/', $dir) || is_file( $file_path ) )?$html_no_link:$html_link;
+	if (is_file( $file_path )){ $dir .= " | size: " . filesize($file_path); }
 
 	return sprintf($html, $link_prefix . $add_query . $dir_postfix, $dir);
 }
